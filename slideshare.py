@@ -60,6 +60,7 @@ def makePDF():
     print("Se ha creado el PDF \"result.pdf\"")
 
 def main():
+    os.path.join(os.path.dirname(__file__))
     downloadImages()
     makePDF()
 
