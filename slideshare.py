@@ -46,7 +46,7 @@ def downloadImages(image1, count):
             print("█", end = "")
         for j in range(longBarra-barra):
             print(" ", end = "")
-        print("| " + "{:.2f}".format((i - 1) * 100 / count) + "%", end = "")
+        print("| " + "{:.2f}".format((i - 1) * 100 / count) + "% (" + str(i - 1) + " / " + str(count) + ")" , end = "")
         url = urlParts[0] + "-" + str(i) + "-1024.jpg" + urlParts[1]
 
         img_data = requests.get(url).content
