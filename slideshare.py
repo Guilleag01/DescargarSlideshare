@@ -1,4 +1,5 @@
 # Iba a comentar este código, pero me ha dado mucha pereza así que así se queda
+# Bueno, al final he comentado un poco porque me estaba poniendo nervioso
 try:
     import requests
 except:
@@ -18,7 +19,9 @@ import pathlib
 import re
 
 def downloadImages(image1, count):
-
+    # Comprobación de si existe la carpeta images
+    # y en caso de que exista preguntar al usuario
+    # si quiere borrarla.
     if exists("images"):
         dir = os.listdir("images")
         if len(dir) != 0:
@@ -33,12 +36,16 @@ def downloadImages(image1, count):
     else:
         print("Creando directorio de imágenes...")
         os.mkdir("images")
-    
+
     print("\nDescargarndo imágenes de SlideShare...")
+
+    # Se separa la url para poder modificar el número
+    # de imágen mas adelante
     urlParts = re.split(r'-1-1024.jpg', image1)
+    
     i = 1
     while(True):
-
+        # Todo el tema de la barra de carga
         longBarra = 50
         print("\r|", end = "")
         barra = int((i - 1) * longBarra / count)
@@ -47,12 +54,18 @@ def downloadImages(image1, count):
         for j in range(longBarra-barra):
             print(" ", end = "")
         print("| " + "{:.2f}".format((i - 1) * 100 / count) + "% (" + str(i - 1) + " / " + str(count) + ")" , end = "")
-        url = urlParts[0] + "-" + str(i) + "-1024.jpg" + urlParts[1]
 
+        # Se reconstruye la url con el número de imágen
+        # correspondiente y se descarga la imágen
+        url = urlParts[0] + "-" + str(i) + "-1024.jpg" + urlParts[1]
         img_data = requests.get(url).content
+
+        # Si la imágen está vacia es que ya no hay mas diapositivas
         if (img_data == b''):
             break
         
+        # Guarda la imágen en la carpeta images con el nombre que 
+        # corresponda
         imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         with open(imagePath, 'wb') as handler:
             handler.write(img_data)
@@ -62,11 +75,14 @@ def downloadImages(image1, count):
 def makePDF(numImagenes):
     print("\nCreando PDF...")
     imagesRGB = list()
+
+    # Se abren las imágenes, se convierten a RGB y se almacenan en una lista
     for i in range(1,numImagenes + 1):
         imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         image = Image.open(imagePath)
         imagesRGB.append(image.convert("RGB"))
         
+    # Se crea el pdf en base a las imágenes de la lista
     pdfPath = os.path.join("images", "image-0.jpg")
     imagesRGB[0].save("result.pdf", save_all=True, append_images=imagesRGB[1:])
     print("Se ha creado el PDF \"result.pdf\"")
