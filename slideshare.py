@@ -23,8 +23,8 @@ def downloadImages(image1, count):
         dir = os.listdir("images")
         if len(dir) != 0:
             print()
-            texto = input("El directorio \"images\" no está vacio ¿Desea borrar su contenido?[S/N]: ")
-            if texto.capitalize() == "S":
+            texto = input("El directorio \"images\" no está vacio ¿Desea borrar su contenido? [S/n]: ")
+            if texto.capitalize() == "S" or texto == "":
                 shutil.rmtree("images")
                 os.mkdir("images")
             else:
