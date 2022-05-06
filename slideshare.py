@@ -17,7 +17,7 @@ import pathlib
 import re
 
 def downloadImages(image1):
-    path = pathlib.Path(__file__).parent.absolute()
+    #path = pathlib.Path(__file__).parent.absolute()
 
     if exists("images"):
         dir = os.listdir("images")
@@ -25,7 +25,7 @@ def downloadImages(image1):
             print()
             texto = input("El directorio \"images\" no está vacio ¿Desea borrar su contenido?[S/N]: ")
             if texto.capitalize() == "S":
-                shutil.rmtree(os.path.join(path, "images"))
+                shutil.rmtree("images")
                 os.mkdir("images")
             else:
                 print("No se puede continuar si el directorio \"images\" no está vacio")
@@ -45,8 +45,8 @@ def downloadImages(image1):
         if (img_data == b''):
             break
         
-        imagePath = os.path.join(path, "images")
-        imagePath = os.path.join(imagePath, "image-" + str(i) + ".jpg")
+        #imagePath = os.path.join(path, "images")
+        imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         with open(imagePath, 'wb') as handler:
             handler.write(img_data)
         i+=1
@@ -54,17 +54,17 @@ def downloadImages(image1):
 
 def makePDF(numImagenes):
     print("Creando PDF...")
-    path = pathlib.Path(__file__).parent.absolute()
+    #path = pathlib.Path(__file__).parent.absolute()
     #imagesJPG = list()
     imagesRGB = list()
     for i in range(1,numImagenes + 1):
-        imagePath = os.path.join(path, "images")
-        imagePath = os.path.join(imagePath, "image-" + str(i) + ".jpg")
+        #imagePath = os.path.join(path, "images")
+        imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         image = Image.open(imagePath)
         imagesRGB.append(image.convert("RGB"))
         
-    pdfPath = os.path.join(path, "images")
-    pdfPath = os.path.join(pdfPath, "image-0.jpg")
+    #pdfPath = os.path.join(path, "images")
+    pdfPath = os.path.join("images", "image-0.jpg")
     imagesRGB[0].save("result.pdf", save_all=True, append_images=imagesRGB[1:])
     print("Se ha creado el PDF \"result.pdf\"")
 
