@@ -17,7 +17,6 @@ import pathlib
 import re
 
 def downloadImages(image1):
-    #path = pathlib.Path(__file__).parent.absolute()
 
     if exists("images"):
         dir = os.listdir("images")
@@ -38,14 +37,12 @@ def downloadImages(image1):
     urlParts = re.split(r'-1-1024.jpg', image1)
     i = 1
     while(True):
-        #url = "https://image.slidesharecdn.com/plandecontingencia-140605102313-phpapp01/95/plan-de-contingencia-" + str(i) + "-1024.jpg?cb=1401963929 1024w"
         url = urlParts[0] + "-" + str(i) + "-1024.jpg" + urlParts[1]
 
         img_data = requests.get(url).content
         if (img_data == b''):
             break
         
-        #imagePath = os.path.join(path, "images")
         imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         with open(imagePath, 'wb') as handler:
             handler.write(img_data)
@@ -54,22 +51,17 @@ def downloadImages(image1):
 
 def makePDF(numImagenes):
     print("Creando PDF...")
-    #path = pathlib.Path(__file__).parent.absolute()
-    #imagesJPG = list()
     imagesRGB = list()
     for i in range(1,numImagenes + 1):
-        #imagePath = os.path.join(path, "images")
         imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
         image = Image.open(imagePath)
         imagesRGB.append(image.convert("RGB"))
         
-    #pdfPath = os.path.join(path, "images")
     pdfPath = os.path.join("images", "image-0.jpg")
     imagesRGB[0].save("result.pdf", save_all=True, append_images=imagesRGB[1:])
     print("Se ha creado el PDF \"result.pdf\"")
 
 def main():
-    # https://www.slideshare.net/ericschmidt/trillion-dollar-coach-book-bill-campbell
     url = input("Introduce la url del slideshare que deseas descargar: ")
     text = requests.get(url).text
     image1 = ""
