@@ -8,6 +8,7 @@ from genericpath import exists
 from gettext import install
 import os
 import shutil
+from time import sleep
 try:
     from PIL import Image
 except:
@@ -16,7 +17,7 @@ except:
 import pathlib
 import re
 
-def downloadImages(image1):
+def downloadImages(image1, count):
 
     if exists("images"):
         dir = os.listdir("images")
@@ -33,10 +34,19 @@ def downloadImages(image1):
         print("Creando directorio de imágenes...")
         os.mkdir("images")
     
-    print("Descargarndo imágenes de SlideShare...")
+    print("\nDescargarndo imágenes de SlideShare...")
     urlParts = re.split(r'-1-1024.jpg', image1)
     i = 1
     while(True):
+
+        longBarra = 50
+        print("\r|", end = "")
+        barra = int((i - 1) * longBarra / count)
+        for j in range(barra):
+            print("█", end = "")
+        for j in range(longBarra-barra):
+            print(" ", end = "")
+        print("| " + "{:.2f}".format((i - 1) * 100 / count) + "%", end = "")
         url = urlParts[0] + "-" + str(i) + "-1024.jpg" + urlParts[1]
 
         img_data = requests.get(url).content
@@ -50,7 +60,7 @@ def downloadImages(image1):
     return i
 
 def makePDF(numImagenes):
-    print("Creando PDF...")
+    print("\nCreando PDF...")
     imagesRGB = list()
     for i in range(1,numImagenes + 1):
         imagePath = os.path.join("images", "image-" + str(i) + ".jpg")
@@ -65,13 +75,18 @@ def main():
     url = input("Introduce la url del slideshare que deseas descargar: ")
     text = requests.get(url).text
     image1 = ""
+    num = 0
+    images = list()
     try:
-        image1 = re.findall(r'https://image.slidesharecdn.com[^".]*1024[^"]*"', text)[0][:-1]
+        images = re.findall(r'https://image.slidesharecdn.com[^".]*1024[^"]*"', text)
+        image1 = images[0][:-1]
+        num = len(images) - 1
     except:
         print("Ha habido un error")
         raise SystemExit(0)
 
-    numIagenes = downloadImages(image1)
+    numIagenes = downloadImages(image1, num)
+    print("")
     makePDF(numIagenes - 1)
 
 if __name__ == "__main__":
